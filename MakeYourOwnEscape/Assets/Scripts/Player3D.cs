@@ -19,7 +19,7 @@ public class Player3D : MonoBehaviour {
 	[SerializeField]
 	private float maxSpeed = 18f;
 	[SerializeField]
-	private float VelocityAcceleration = 8f, rotationAcceleration = 3f;
+	private float VelocityAcceleration = 8f, rotationAcceleration = 3f, visionDistance = 1f;
 
 	[SerializeField]
 	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f, maxStep = 40f;
@@ -51,16 +51,30 @@ public class Player3D : MonoBehaviour {
 				Vector3 axis = Vector3.Cross(transform.up, Z_prime);
 				float angle = Vector3.Angle(transform.up, Z_prime);
                 transform.RotateAround(transform.position, axis, angle);
-
+                Debug.Log("direction joystick : " + direction_joystick);
                 Debug.DrawRay(transform.position, transform.forward, Color.green);
 				Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
-				float angle2 = Vector3.Angle(transform.forward, xy_p);
-				transform.RotateAround(transform.position, axis, -angle);
-                
+                float angletest = Vector3.Angle(transform.forward, xy_p - Z_prime);
 
-                Debug.DrawRay(transform.position, axis, Color.red);
+                Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.magenta);
+                Debug.DrawRay(Z_prime, transform.forward, Color.white);
+                transform.RotateAround(transform.position, axis, -angle);
+                float angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
+                Debug.Log("angletest : " + angletest + " | angle2 : " + angle2);
+
+                Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.gray);
+                Debug.DrawRay(Z_prime, transform.forward, Color.cyan);
+                /*
+                var line = transform.position + (transform.forward * visionDistance);
+                var rotatedLine = Quaternion.AngleAxis(angle2, transform.up) * line;
+                Debug.DrawLine(transform.position, rotatedLine, Color.cyan);*/
+
+                //Debug.Break();
+                Debug.DrawRay(transform.position, transform.forward, Color.red);
                 Debug.DrawLine(Camera.main.transform.position, Z_prime, Color.yellow);
                 Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
+
+                Debug.Break();
                 /*//Debug.Break();
                 if (angle2 > step)
 					Debug.Log("Angle above " + step + " : " + angle2);
@@ -75,10 +89,12 @@ public class Player3D : MonoBehaviour {
 				//angle2 = angle2 > 90f ? angle2 - 180f: angle2;
                 */
 
-                float rotatedAngle = angle2 > step ? 2* (removeStep - angle2) / 5 : 2*angle2/5;
-                Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);
+                float rotatedAngle = angle2 > 180f ? -180f + (angle2 - 180f) : angle2;
+                if(angle2 > 0f) 
+                    Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);
                 
 				transform.RotateAround(transform.position, transform.up, rotatedAngle);
+
 				float speed = VelocityAcceleration * direction_joystick.magnitude;
 				velocity = new Vector3(0f,0f, speed);
 				speed = 0f;
