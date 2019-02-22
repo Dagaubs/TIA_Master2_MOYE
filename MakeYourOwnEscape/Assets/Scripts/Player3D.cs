@@ -22,7 +22,7 @@ public class Player3D : MonoBehaviour {
 	private float VelocityAcceleration = 8f, rotationAcceleration = 3f;
 
 	[SerializeField]
-	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f;
+	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f, maxStep = 40f;
 
 	
 
@@ -50,25 +50,35 @@ public class Player3D : MonoBehaviour {
 				Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.forward);
 				Vector3 axis = Vector3.Cross(transform.up, Z_prime);
 				float angle = Vector3.Angle(transform.up, Z_prime);
+                transform.RotateAround(transform.position, axis, angle);
 
-				transform.RotateAround(transform.position, axis, angle);
+                Debug.DrawRay(transform.position, transform.forward, Color.green);
 				Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
 				float angle2 = Vector3.Angle(transform.forward, xy_p);
 				transform.RotateAround(transform.position, axis, -angle);
-	/*
-				if(angle2 > step)
+                
+
+                Debug.DrawRay(transform.position, axis, Color.red);
+                Debug.DrawLine(Camera.main.transform.position, Z_prime, Color.yellow);
+                Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
+                /*//Debug.Break();
+                if (angle2 > step)
 					Debug.Log("Angle above " + step + " : " + angle2);
 				else if(angle2 < 0f)
 					Debug.Log("NEGATIVE ANGLE : " + angle2);
-	*/
+	
 				if(angle2 > step){
 					float newAngle = angle2 - removeStep;
 					//Debug.Log("Old Angle : " + angle2 + " | new Angle : " + newAngle);
 					angle2 = newAngle;
 				}
 				//angle2 = angle2 > 90f ? angle2 - 180f: angle2;
+                */
 
-				transform.RotateAround(transform.position, transform.up, angle2/5f);
+                float rotatedAngle = angle2 > step ? 2* (removeStep - angle2) / 5 : 2*angle2/5;
+                Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);
+                
+				transform.RotateAround(transform.position, transform.up, rotatedAngle);
 				float speed = VelocityAcceleration * direction_joystick.magnitude;
 				velocity = new Vector3(0f,0f, speed);
 				speed = 0f;

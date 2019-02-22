@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-#region Static
+    #region Static
+
+    [SerializeField]
+    private Canvas _canvas;
+
+    [SerializeField]
+    private GameObject panelMobileControl, panelLevelEditing;
+
+    [SerializeField]
+    private GameObject _startTower;
 #endregion
 
 #region Script Parameters
@@ -16,7 +25,7 @@ public class GameManager : MonoBehaviour {
 #region Unity Methods
 	// Use this for initialization
 	void Start () {
-		
+        panelMobileControl.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -25,6 +34,11 @@ public class GameManager : MonoBehaviour {
 #endregion
 
 #region Methods
+
+    public void FinishLevelEditing()
+    {
+
+    }
 #endregion
 
 #region Private Functions
