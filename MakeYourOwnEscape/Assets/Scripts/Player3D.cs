@@ -30,7 +30,7 @@ public class Player3D : MonoBehaviour {
     private float gravity, maxJumpVelocity, minJumpVelocity;
 
 	[SerializeField]
-	private bool useKeyBoard = false;
+	private bool useKeyBoard = false, _break;
 
     private bool mouseDown = false;
 
@@ -55,7 +55,7 @@ public class Player3D : MonoBehaviour {
 
 		bool jumpPressed = Input.GetKeyDown(KeyCode.Space), jumpUnPressed = Input.GetKeyDown(KeyCode.Space);
 		if(!useKeyBoard){
-			Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"), 0f);
+			Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"),0f, CrossPlatformInputManager.GetAxis("Vertical"));
 			//Debug.Log("direction_joystick : " + direction_joystick);
 			if(direction_joystick.magnitude > 0.1f && mouseDown){
 				Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.zero);
@@ -64,7 +64,8 @@ public class Player3D : MonoBehaviour {
                 //transform.RotateAround(transform.position, axis, angle);
 
                 Debug.DrawRay(transform.position, transform.forward, Color.green);
-				Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
+                //Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
+                Vector3 xy_p = direction_joystick;
                 //float angletest = Vector3.Angle(transform.forward, xy_p - Z_prime);
 
 
@@ -83,17 +84,24 @@ public class Player3D : MonoBehaviour {
                 Debug.DrawRay(transform.position, transform.forward, Color.red);
                 Debug.DrawLine(Camera.main.transform.position, Z_prime, Color.yellow);
                 Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
-                Debug.Log("angle 2 : " + angle2);
 
-                Vector3 actuallyLookingPoint = Vector3.zero - transform.forward + Z_prime;
-                Debug.Log("actually : " + actuallyLookingPoint);
-                if(xy_p.x < actuallyLookingPoint.x) // needs to set reverse angle !
+                //Vector3 actuallyLookingPoint = Vector3.zero - transform.forward + Z_prime;
+                Vector3 direction = xy_p - transform.forward;
+                Debug.Log("actually : " + transform.forward + " dir : " + direction);
+
+                if((direction.x < 0 && direction.z < 0) || (direction.x > 0 && direction.z > 0)) // needs to set reverse angle !
                 {
-                    angle2 = -angle2;
+                    angle2 = 2 * angle2 / 5;
+                }
+                else
+                {
+                    angle2 = -2 * angle2 / 5;
                 }
 
-                /*//Debug.Break();
-                if (angle2 > step)
+                Debug.Log("angle 2 : " + angle2);
+                if(_break)
+                    Debug.Break();
+                /*if (angle2 > step)
 					Debug.Log("Angle above " + step + " : " + angle2);
 				else if(angle2 < 0f)
 					Debug.Log("NEGATIVE ANGLE : " + angle2);
@@ -106,11 +114,11 @@ public class Player3D : MonoBehaviour {
 				//angle2 = angle2 > 90f ? angle2 - 180f: angle2;
                 */
 
-               /* float rotatedAngle = angle2 > 90 ? 90 - angle2 : angle2;
+                /* float rotatedAngle = angle2 > 90 ? 90 - angle2 : angle2;
 
-                Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);*/
-                
-				transform.RotateAround(transform.position, transform.up, 2*angle2/5);
+                 Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);*/
+
+                transform.RotateAround(transform.position, transform.up, angle2);
 
 				float speed = VelocityAcceleration * direction_joystick.magnitude;
 				velocity = new Vector3(0f,0f, speed);
