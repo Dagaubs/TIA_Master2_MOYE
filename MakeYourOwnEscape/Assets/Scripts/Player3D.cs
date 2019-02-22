@@ -32,6 +32,8 @@ public class Player3D : MonoBehaviour {
 	[SerializeField]
 	private bool useKeyBoard = false;
 
+    private bool mouseDown = false;
+
 	private Vector3 targetOrientation;
 
 	// Use this for initialization
@@ -42,25 +44,33 @@ public class Player3D : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetMouseButtonDown(1))
+        {
+            mouseDown = true;
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            mouseDown = false;
+        }
+
 		bool jumpPressed = Input.GetKeyDown(KeyCode.Space), jumpUnPressed = Input.GetKeyDown(KeyCode.Space);
 		if(!useKeyBoard){
 			Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"), 0f);
 			//Debug.Log("direction_joystick : " + direction_joystick);
-			if(direction_joystick.magnitude > 0.1f){
-				Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.forward);
+			if(direction_joystick.magnitude > 0.1f && mouseDown){
+				Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.zero);
 				Vector3 axis = Vector3.Cross(transform.up, Z_prime);
 				float angle = Vector3.Angle(transform.up, Z_prime);
-                transform.RotateAround(transform.position, axis, angle);
-                Debug.Log("direction joystick : " + direction_joystick);
+                //transform.RotateAround(transform.position, axis, angle);
+
                 Debug.DrawRay(transform.position, transform.forward, Color.green);
 				Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
-                float angletest = Vector3.Angle(transform.forward, xy_p - Z_prime);
+                //float angletest = Vector3.Angle(transform.forward, xy_p - Z_prime);
 
-                Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.magenta);
-                Debug.DrawRay(Z_prime, transform.forward, Color.white);
-                transform.RotateAround(transform.position, axis, -angle);
+
+                //transform.RotateAround(transform.position, axis, -angle);
                 float angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
-                Debug.Log("angletest : " + angletest + " | angle2 : " + angle2);
+                //Debug.Log("angletest : " + angletest + " | angle2 : " + angle2);
 
                 Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.gray);
                 Debug.DrawRay(Z_prime, transform.forward, Color.cyan);
@@ -73,8 +83,15 @@ public class Player3D : MonoBehaviour {
                 Debug.DrawRay(transform.position, transform.forward, Color.red);
                 Debug.DrawLine(Camera.main.transform.position, Z_prime, Color.yellow);
                 Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
+                Debug.Log("angle 2 : " + angle2);
 
-                Debug.Break();
+                Vector3 actuallyLookingPoint = Vector3.zero - transform.forward + Z_prime;
+                Debug.Log("actually : " + actuallyLookingPoint);
+                if(xy_p.x < actuallyLookingPoint.x) // needs to set reverse angle !
+                {
+                    angle2 = -angle2;
+                }
+
                 /*//Debug.Break();
                 if (angle2 > step)
 					Debug.Log("Angle above " + step + " : " + angle2);
@@ -89,11 +106,11 @@ public class Player3D : MonoBehaviour {
 				//angle2 = angle2 > 90f ? angle2 - 180f: angle2;
                 */
 
-                float rotatedAngle = angle2 > 180f ? -180f + (angle2 - 180f) : angle2;
-                if(angle2 > 0f) 
-                    Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);
+               /* float rotatedAngle = angle2 > 90 ? 90 - angle2 : angle2;
+
+                Debug.Log("angle2 : " + angle2 + " | rotated: " + rotatedAngle);*/
                 
-				transform.RotateAround(transform.position, transform.up, rotatedAngle);
+				transform.RotateAround(transform.position, transform.up, 2*angle2/5);
 
 				float speed = VelocityAcceleration * direction_joystick.magnitude;
 				velocity = new Vector3(0f,0f, speed);
