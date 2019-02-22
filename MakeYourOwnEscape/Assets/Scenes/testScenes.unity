@@ -1274,6 +1274,11 @@ PrefabInstance:
       propertyPath: step
       value: 180
       objectReference: {fileID: 0}
+    - target: {fileID: 114927573066811936, guid: 2be51eec039b84593b2f4d1acb065684,
+        type: 3}
+      propertyPath: _break
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114310109112038038, guid: 2be51eec039b84593b2f4d1acb065684,
         type: 3}
       propertyPath: skinWidth
