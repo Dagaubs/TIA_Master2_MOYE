@@ -53,11 +53,13 @@ public class Player3D : MonoBehaviour {
             mouseDown = false;
         }
 
-		bool jumpPressed = Input.GetKeyDown(KeyCode.Space), jumpUnPressed = Input.GetKeyDown(KeyCode.Space);
+        bool jumpPressed, jumpUnPressed;
 		if(!useKeyBoard){
 			Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"),0f, CrossPlatformInputManager.GetAxis("Vertical"));
-			//Debug.Log("direction_joystick : " + direction_joystick);
-			if(direction_joystick.magnitude > 0.1f && mouseDown){
+            jumpPressed = CrossPlatformInputManager.GetButtonDown("Jump");
+            jumpUnPressed = CrossPlatformInputManager.GetButtonUp("Jump");
+            //Debug.Log("direction_joystick : " + direction_joystick);
+            if (direction_joystick.magnitude > 0.1f && mouseDown){
 				Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.zero);
 				//Vector3 axis = Vector3.Cross(transform.up, Z_prime);
 				//float angle = Vector3.Angle(transform.up, Z_prime);
@@ -115,20 +117,11 @@ public class Player3D : MonoBehaviour {
 			if(Input.GetKey(KeyCode.LeftArrow)){
 				//velocity.z = velocity.z - acceleration > -maxSpeed ? velocity.z - acceleration : -maxSpeed;
 				targetOrientation_Y += rotationAcceleration;
-			}
-			targetOrientation = new Vector3(transform.localEulerAngles.x,targetOrientation_Y, transform.localEulerAngles.z);
+            }
+            jumpPressed = Input.GetKeyDown(KeyCode.Space);
+            jumpUnPressed = Input.GetKeyUp(KeyCode.Space);
+            targetOrientation = new Vector3(transform.localEulerAngles.x,targetOrientation_Y, transform.localEulerAngles.z);
 			
-			if(jumpPressed && controller.collisions.below){
-				animator.SetTrigger("Jump");
-				velocity.y = maxJumpVelocity;
-			}
-
-			if(jumpUnPressed){
-				if (velocity.y > minJumpVelocity)
-                {
-                    velocity.y = minJumpVelocity;
-                }
-			}
 
 			transform.localRotation = Quaternion.Euler(targetOrientation.x, targetOrientation.y, targetOrientation.z);
 
@@ -138,7 +131,21 @@ public class Player3D : MonoBehaviour {
 			//targetOrientation = transform.localEulerAngles;
 		}
 
-		if(!controller.collisions.below) velocity.y += gravity * Time.deltaTime;
+        if (jumpPressed && controller.collisions.below)
+        {
+            animator.SetTrigger("Jump");
+            velocity.y = maxJumpVelocity;
+        }
+
+        if (jumpUnPressed)
+        {
+            if (velocity.y > minJumpVelocity)
+            {
+                velocity.y = minJumpVelocity;
+            }
+        }
+
+        if (!controller.collisions.below) velocity.y += gravity * Time.deltaTime;
 		else if(!jumpPressed) velocity.y = 0;
 		
 		animator.SetFloat("speed", velocity.z);

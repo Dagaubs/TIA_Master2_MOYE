@@ -6,6 +6,16 @@ public class GameManager : MonoBehaviour {
 
     #region Static
 
+    private static GameManager instance;
+
+    #endregion
+
+    #region Script Parameters
+    private GameObject _actualSetPositionPanel = null;
+    #endregion
+
+    #region Fields
+
     [SerializeField]
     private Canvas _canvas;
 
@@ -14,17 +24,12 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject _startTower;
-#endregion
+    #endregion
 
-#region Script Parameters
-#endregion
-
-#region Fields
-#endregion
-
-#region Unity Methods
-	// Use this for initialization
-	void Start () {
+    #region Unity Methods
+    // Use this for initialization
+    void Start () {
+        instance = this;
         panelMobileControl.SetActive(false);
 	}
 	
@@ -38,6 +43,16 @@ public class GameManager : MonoBehaviour {
     public void FinishLevelEditing()
     {
 
+    }
+
+    public bool DisplaySetPositionUI(SetPositionHandler caller)
+    {
+        if (_actualSetPositionPanel == null)
+        {
+
+            return true;
+        }
+        else return false;
     }
 #endregion
 

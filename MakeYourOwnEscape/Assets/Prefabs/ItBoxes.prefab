@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1100515284073099969}
   - component: {fileID: 1100515284073099968}
-  - component: {fileID: 1100515284073099975}
   - component: {fileID: 1100515284073099974}
   - component: {fileID: 1100515284073099973}
   - component: {fileID: 1100515284073099972}
+  - component: {fileID: 7099185239871202825}
   m_Layer: 0
   m_Name: ItBoxes
   m_TagString: Untagged
@@ -56,18 +56,6 @@ MonoBehaviour:
   mImageTargetType: 0
   mWidth: 0.2
   mHeight: 0.2
---- !u!114 &1100515284073099975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100515284073099995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1009501192, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1100515284073099974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +113,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100515284073099995}
   m_Mesh: {fileID: 0}
+--- !u!114 &7099185239871202825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100515284073099995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a917f0af64a6423093132dab321c15f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1100515282922040753
 PrefabInstance:
   m_ObjectHideFlags: 0
