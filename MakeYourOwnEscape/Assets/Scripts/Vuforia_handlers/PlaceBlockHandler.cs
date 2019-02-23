@@ -40,6 +40,7 @@ public class PlaceBlockHandler : MonoBehaviour, IVirtualButtonEventHandler
             }
             else
             {
+                Debug.Log("child_obj active ? " + child_obj.activeSelf);
                 child_obj.transform.SetParent(placed_blocks_transform, false);
                 placed = true;
             }
