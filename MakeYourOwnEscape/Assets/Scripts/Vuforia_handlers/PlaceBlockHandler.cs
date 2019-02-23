@@ -14,6 +14,14 @@ public class PlaceBlockHandler : MonoBehaviour, IVirtualButtonEventHandler
 
     bool placed = false;
 
+    void Start()
+    {
+        VirtualButtonBehaviour[] vbs = GetComponentsInChildren<VirtualButtonBehaviour>();
+        for(int i = 0; i < vbs.Length; i++)
+        {
+            vbs[i].RegisterEventHandler(this);
+        }
+    }
 
     public void OnButtonPressed(VirtualButtonBehaviour vb)
     {
@@ -22,6 +30,7 @@ public class PlaceBlockHandler : MonoBehaviour, IVirtualButtonEventHandler
 
     public void OnButtonReleased(VirtualButtonBehaviour vb)
     {
+        Debug.Log("released");
         if(vb.VirtualButtonName == "PlaceBlock")
         {
             if (placed)
