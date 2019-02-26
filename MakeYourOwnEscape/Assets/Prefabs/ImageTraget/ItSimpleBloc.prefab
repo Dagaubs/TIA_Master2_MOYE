@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3254459385172726932}
   - component: {fileID: 3254459385172726933}
-  - component: {fileID: 3254459385172726934}
   - component: {fileID: 3254459385172726935}
   - component: {fileID: 3254459385172726928}
   - component: {fileID: 3254459385172726929}
+  - component: {fileID: 1560724298}
   m_Layer: 0
   m_Name: ItSimpleBloc
   m_TagString: Untagged
@@ -56,18 +56,6 @@ MonoBehaviour:
   mImageTargetType: 0
   mWidth: 0.084
   mHeight: 0.084
---- !u!114 &3254459385172726934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254459385172726930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1009501192, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3254459385172726935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +113,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3254459385172726930}
   m_Mesh: {fileID: 0}
+--- !u!114 &1560724298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3254459385172726930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a917f0af64a6423093132dab321c15f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3254459384000224075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,6 +179,18 @@ PrefabInstance:
     - target: {fileID: 4922870652443012, guid: bfb5ec69f1bfbcd4d8fcd84386c195da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922870652443012, guid: bfb5ec69f1bfbcd4d8fcd84386c195da, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922870652443012, guid: bfb5ec69f1bfbcd4d8fcd84386c195da, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922870652443012, guid: bfb5ec69f1bfbcd4d8fcd84386c195da, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 1051079557559712, guid: bfb5ec69f1bfbcd4d8fcd84386c195da, type: 3}
       propertyPath: m_StaticEditorFlags

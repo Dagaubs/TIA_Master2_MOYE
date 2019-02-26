@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4558881719648217105}
   - component: {fileID: 4558881719648217106}
-  - component: {fileID: 4558881719648217107}
   - component: {fileID: 4558881719648217108}
   - component: {fileID: 4558881719648217109}
   - component: {fileID: 4558881719648217110}
+  - component: {fileID: 371631165}
   m_Layer: 0
   m_Name: ItBridges
   m_TagString: Untagged
@@ -56,18 +56,6 @@ MonoBehaviour:
   mImageTargetType: 0
   mWidth: 0.084
   mHeight: 0.084
---- !u!114 &4558881719648217107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4558881719648217111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1009501192, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4558881719648217108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +113,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4558881719648217111}
   m_Mesh: {fileID: 0}
+--- !u!114 &371631165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558881719648217111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a917f0af64a6423093132dab321c15f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4558881720109019074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,6 +179,18 @@ PrefabInstance:
     - target: {fileID: 4500916902596506, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500916902596506, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500916902596506, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500916902596506, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 114159285683364414, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4,
         type: 3}
