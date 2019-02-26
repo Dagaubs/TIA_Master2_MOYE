@@ -20,11 +20,9 @@ public class GameManager : MonoBehaviour {
     private Canvas _canvas;
 
     [SerializeField]
-    private GameObject panelMobileControl, panelLevelEditing, player_prefab;
-
+    private GameObject panelMobileControl, panelLevelEditing;
+    
     [SerializeField]
-    private Transform _spawnPoint;
-
     private Player3D actualPlayer;
     #endregion
 
@@ -55,7 +53,7 @@ public class GameManager : MonoBehaviour {
 
     private void spawnPlayer()
     {
-        actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation).GetComponent<Player3D>();
+        //actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation).GetComponent<Player3D>();
         actualPlayer.SpawnPlayer();
     }
 
