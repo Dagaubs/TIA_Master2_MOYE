@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card Bridge
       objectReference: {fileID: 0}
+    - target: {fileID: 1565546236401802, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4500916902596506, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -197,6 +201,58 @@ PrefabInstance:
       propertyPath: forbiddenBuildCube
       value: 
       objectReference: {fileID: 4558103304201292050}
+    - target: {fileID: 1247063817769758, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1622926749951696, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1908906614211442, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136222622953788, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1376635445359342, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1563007768912936, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693504659845712, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714367448937932, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181322054588704, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1274040909859006, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523915121710750, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1428716825927990, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1644633361578590, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8dc0159bf85a0fb4ea3a03aca2bb6ba4, type: 3}
 --- !u!4 &4560909791336734808 stripped
