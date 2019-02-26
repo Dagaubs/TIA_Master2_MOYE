@@ -20,10 +20,12 @@ public class GameManager : MonoBehaviour {
     private Canvas _canvas;
 
     [SerializeField]
-    private GameObject panelMobileControl, panelLevelEditing;
+    private GameObject panelMobileControl, panelLevelEditing, player_prefab;
 
     [SerializeField]
-    private GameObject _startTower;
+    private Transform _spawnPoint;
+
+    private Player3D actualPlayer;
     #endregion
 
     #region Unity Methods
@@ -42,7 +44,19 @@ public class GameManager : MonoBehaviour {
 
     public void FinishLevelEditing()
     {
+        // Modify UI
+        panelMobileControl.SetActive(true);
+        panelLevelEditing.SetActive(false);
 
+        //Spawn Player
+        spawnPlayer();
+
+    }
+
+    private void spawnPlayer()
+    {
+        actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation).GetComponent<Player3D>();
+        actualPlayer.SpawnPlayer();
     }
 
     public bool DisplaySetPositionUI(SetPositionHandler caller)
