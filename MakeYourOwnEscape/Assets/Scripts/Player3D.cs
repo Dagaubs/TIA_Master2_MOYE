@@ -22,7 +22,7 @@ public class Player3D : MonoBehaviour {
 	private float VelocityAcceleration = 8f, rotationAcceleration = 3f, visionDistance = 1f;
 
 	[SerializeField]
-	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f, maxStep = 40f;
+	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f, maxStep = 40f, timeToRecover;
 
 	
 
@@ -32,7 +32,7 @@ public class Player3D : MonoBehaviour {
 	[SerializeField]
 	private bool useKeyBoard = false, _break;
 
-    private bool mouseDown = false, inAir = false;
+    private bool mouseDown = false, inAir = false, justLanded = false;
 
     public bool gameRunning = false;
 
@@ -65,6 +65,7 @@ public class Player3D : MonoBehaviour {
             }
             */
             bool jumpPressed, jumpUnPressed;
+            float angle2 = 0f;
             if (!useKeyBoard)
             {
                 Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"), 0f, CrossPlatformInputManager.GetAxis("Vertical"));
@@ -80,7 +81,7 @@ public class Player3D : MonoBehaviour {
                     //Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
                     Vector3 xy_p = direction_joystick;
 
-                    float angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
+                    angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
                     /*
                     Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.gray);
                     Debug.DrawRay(Z_prime, transform.forward, Color.cyan);
@@ -155,25 +156,27 @@ public class Player3D : MonoBehaviour {
             if (!controller.collisions.below)
             {
                 velocity.y += gravity * Time.deltaTime;
-                if (!inAir)
+                /*
+                if (!inAir && !justLanded)
                 {
                     inAir = true;
                     animator.SetTrigger("InAir");
                 }
+                */
             }
             else if (!jumpPressed)
             {
                 if (inAir)
                 {
                     animator.SetTrigger("Land");
+                    StartCoroutine(RecoverFromLanding());
                     inAir = false;
-                    
                 }
                 velocity.y = 0;
             }
 
             animator.SetFloat("speed", velocity.z);
-            controller.Move(velocity * Time.deltaTime);
+            controller.Move(velocity * Time.deltaTime, angle2);
 
             velocity = velocity / 3;
         }
@@ -182,5 +185,17 @@ public class Player3D : MonoBehaviour {
     public bool isLeft(Vector3 a, Vector3 b, Vector3 c)
     {
         return ((b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x)) > 0;
+    }
+
+    private IEnumerator RecoverFromLanding()
+    {
+        justLanded = true;
+        float timePassed = 0f;
+        while (timePassed < timeToRecover)
+        {
+            timePassed += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        justLanded = false;
     }
 }

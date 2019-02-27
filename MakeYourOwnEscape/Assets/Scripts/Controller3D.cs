@@ -34,16 +34,17 @@ public class Controller3D : MonoBehaviour {
         CalculateRaySpacing();
 	}
 
-	public void Move(Vector3 velocity)
+	public void Move(Vector3 velocity, float angle)
     {
         UpdateRaycastOrigins();
         collisions.Reset();
         hitInfo.Reset();
 
         //Debug.Log("velocity after Move = " + velocity);
-        if (velocity.x != 0)
+        if (angle != 0f)
         {
-            HorizontalCollisions(ref velocity);
+            HorizontalCollisions(ref angle);
+            transform.RotateAround(transform.position, transform.up, angle);
         }
         if (velocity.y != 0)
         {
@@ -64,7 +65,6 @@ public class Controller3D : MonoBehaviour {
         /*if(velocity != Vector3.zero)
             Debug.Break();
         */
-        
         transform.Translate(velocity);
     }
 
@@ -79,34 +79,36 @@ public class Controller3D : MonoBehaviour {
         BackAndForwardLineCheck(ref velocity, raycastOrigins.head, direction, rayLength, Color.black); 
     }
 
-    private void HorizontalCollisions(ref Vector3 velocity)
+    private void HorizontalCollisions(ref float angle)
     {
-        float directionX = Mathf.Sign(velocity.x);
-        float rayLength = Mathf.Abs(velocity.x) + skinWidth;
+        float directionX = Mathf.Sign(angle);
+        Vector3 rayOrigin = (directionX == -1) ? raycastOrigins.pelvis.topLeft : raycastOrigins.pelvis.topRight;
+        Vector3 transpose = Quaternion.AngleAxis(angle, transform.up) * rayOrigin;
+        float rayLength = (transpose - rayOrigin).magnitude;
 
-        HorizontalLineCheck(ref velocity, raycastOrigins.feet, directionX, rayLength, Color.red);
-        HorizontalLineCheck(ref velocity, raycastOrigins.knees, directionX, rayLength, Color.yellow);
-        HorizontalLineCheck(ref velocity, raycastOrigins.pelvis, directionX, rayLength, Color.green);
-        HorizontalLineCheck(ref velocity, raycastOrigins.shoulders, directionX, rayLength, Color.blue);
-        HorizontalLineCheck(ref velocity, raycastOrigins.head, directionX, rayLength, Color.black);      
+        HorizontalLineCheck(ref angle, raycastOrigins.feet, directionX, rayLength, Color.red);
+        HorizontalLineCheck(ref angle, raycastOrigins.knees, directionX, rayLength, Color.yellow);
+        HorizontalLineCheck(ref angle, raycastOrigins.pelvis, directionX, rayLength, Color.green);
+        HorizontalLineCheck(ref angle, raycastOrigins.shoulders, directionX, rayLength, Color.blue);
+        HorizontalLineCheck(ref angle, raycastOrigins.head, directionX, rayLength, Color.black);      
     }
 
-    private void HorizontalLineCheck(ref Vector3 velocity, QuadVector line, float directionX, float rayLength, Color rayColor){
+    private void HorizontalLineCheck(ref float angle, QuadVector line, float directionX, float rayLength, Color rayColor){
         for (int i = 0; i < horizontalRayCount; i++)
         {
-            Vector3 rayOrigin = (directionX == -1) ? line.bottomLeft : line.bottomRight;
-            rayOrigin += Vector3.forward * (horizontalRaySpacing * i);
+            Vector3 rayOrigin = (directionX == -1) ? line.topLeft : line.topRight;
+            rayOrigin += -transform.forward * (horizontalRaySpacing * i);
             RaycastHit hit;
-            Debug.DrawRay(rayOrigin, directionX == -1 ? Vector3.left * rayLength : Vector3.right * rayLength, rayColor);
+            Debug.DrawRay(rayOrigin, directionX == -1 ? -transform.right * rayLength : transform.right * rayLength, rayColor);
             
-            if (Physics.Raycast(rayOrigin, Vector3.right * directionX, out hit, rayLength, _collisionMask))
+            if (Physics.Raycast(rayOrigin, transform.right * directionX, out hit, rayLength, _collisionMask))
             {
                 //Debug.Log("you hit something : " + hit.collider.gameObject.name);
-                velocity.x = (hit.distance - skinWidth) * directionX;
+                angle = (hit.distance - skinWidth) * directionX;
                 rayLength = hit.distance;
 
                 hitInfo.gameObject = hit.collider.gameObject;
-                Debug.Log("touched " + (directionX == -1 ? "left " : "right ") + ": " + hitInfo.gameObject.name);
+                //Debug.Log("touched " + (directionX == -1 ? "left " : "right ") + ": " + hitInfo.gameObject.name);
                 collisions.behind = directionX == -1;
                 collisions.forward = directionX == 1;
             }
@@ -117,22 +119,24 @@ public class Controller3D : MonoBehaviour {
         for (int i = 0; i < horizontalRayCount; i++)
         {
             Vector3 rayOrigin = (directionZ == -1) ? line.bottomLeft : line.topLeft;
-            rayOrigin += Vector3.right * (horizontalRaySpacing * i);
+            Debug.DrawLine(rayOrigin, rayOrigin + Vector3.up * 0.05f, Color.gray);
+            rayOrigin += transform.right * (horizontalRaySpacing * i);
             RaycastHit hit;
-            Debug.DrawRay(rayOrigin, Vector3.forward * directionZ * rayLength, rayColor);
+            Debug.DrawRay(rayOrigin, transform.forward * directionZ * rayLength, rayColor);
             
-            if (Physics.Raycast(rayOrigin, Vector3.forward * directionZ, out hit, rayLength, _collisionMask))
+            if (Physics.Raycast(rayOrigin, transform.forward * directionZ, out hit, rayLength, _collisionMask))
             {
                 //Debug.Log("you hit something : " + hit.collider.gameObject.name);
-                velocity.x = (hit.distance - skinWidth) * directionZ;
+                velocity.z = (hit.distance - skinWidth) * directionZ;
                 rayLength = hit.distance;
 
                 hitInfo.gameObject = hit.collider.gameObject;
-                Debug.Log("touched " + (directionZ == -1 ? "behind " : "forward ") + ": " + hitInfo.gameObject.name);
+                //Debug.Log("touched " + (directionZ == -1 ? "behind " : "forward ") + ": " + hitInfo.gameObject.name);
                 collisions.behind = directionZ == -1;
                 collisions.forward = directionZ == 1;
             }
         }
+        //Debug.Break();
     }
 
     private void VerticalCollisions(ref Vector3 velocity)
@@ -175,35 +179,46 @@ public class Controller3D : MonoBehaviour {
     private void UpdateRaycastOrigins()
     {
         Bounds bounds = _collider.bounds;
+        Vector3 center = _collider.center + transform.position;
         bounds.Expand(skinWidth * -2);
         float midDistance = (bounds.center.y-bounds.min.y)/2;
         float knees_height = bounds.min.y + midDistance;
         float shoulders_height = bounds.center.y+midDistance;
+        float size = bounds.max.x - bounds.center.x;
 
-        raycastOrigins.feet.topLeft = new Vector3(bounds.min.x, bounds.min.y, bounds.max.z);
-        raycastOrigins.feet.bottomLeft = new Vector3(bounds.min.x, bounds.min.y, bounds.min.z);
-        raycastOrigins.feet.topRight = new Vector3(bounds.max.x, bounds.min.y, bounds.max.z);
-        raycastOrigins.feet.bottomRight = new Vector3(bounds.max.x, bounds.min.y, bounds.min.z);
-        
-        raycastOrigins.knees.topLeft = new Vector3(bounds.min.x, knees_height, bounds.max.z);
-        raycastOrigins.knees.bottomLeft = new Vector3(bounds.min.x, knees_height, bounds.min.z);
-        raycastOrigins.knees.topRight = new Vector3(bounds.max.x, knees_height, bounds.max.z);
-        raycastOrigins.knees.bottomRight = new Vector3(bounds.max.x, knees_height, bounds.min.z);
-        
-        raycastOrigins.pelvis.topLeft = new Vector3(bounds.min.x, bounds.center.y, bounds.max.z);
-        raycastOrigins.pelvis.bottomLeft = new Vector3(bounds.min.x, bounds.center.y, bounds.min.z);
-        raycastOrigins.pelvis.topRight = new Vector3(bounds.max.x, bounds.center.y, bounds.max.z);
-        raycastOrigins.pelvis.bottomRight = new Vector3(bounds.max.x, bounds.center.y, bounds.min.z);
-        
-        raycastOrigins.shoulders.topLeft = new Vector3(bounds.min.x, shoulders_height, bounds.max.z);
-        raycastOrigins.shoulders.bottomLeft = new Vector3(bounds.min.x, shoulders_height, bounds.min.z);
-        raycastOrigins.shoulders.topRight = new Vector3(bounds.max.x, shoulders_height, bounds.max.z);
-        raycastOrigins.shoulders.bottomRight = new Vector3(bounds.max.x, shoulders_height, bounds.min.z);
+        Vector3 feetCenter = center + (-transform.up * midDistance*2);
+        Vector3 kneesCenter = feetCenter + transform.up * midDistance;
+        Vector3 pelvisCenter = center;
+        Vector3 shouldersCenter = center + transform.up * midDistance;
+        Vector3 headCenter = center + (transform.up * midDistance*2);
+        Vector3 axis = headCenter - feetCenter;
 
-        raycastOrigins.head.topLeft = new Vector3(bounds.min.x, bounds.max.y, bounds.max.z);
-        raycastOrigins.head.bottomLeft = new Vector3(bounds.min.x, bounds.max.y, bounds.min.z);
-        raycastOrigins.head.topRight = new Vector3(bounds.max.x, bounds.max.y, bounds.max.z);
-        raycastOrigins.head.bottomRight = new Vector3(bounds.max.x, bounds.max.y, bounds.min.z);
+
+        raycastOrigins.feet.topLeft = feetCenter + (-transform.right + transform.forward) * size;
+        raycastOrigins.feet.bottomLeft = feetCenter + (-transform.right + -transform.forward) * size;
+        raycastOrigins.feet.topRight = feetCenter + (transform.right + transform.forward) * size;
+        raycastOrigins.feet.bottomRight = feetCenter + (transform.right + -transform.forward) * size;
+        
+        raycastOrigins.knees.topLeft = kneesCenter + (-transform.right + transform.forward) * size;
+        raycastOrigins.knees.bottomLeft = kneesCenter + (-transform.right + -transform.forward) * size;
+        raycastOrigins.knees.topRight = kneesCenter + (transform.right + transform.forward) * size;
+        raycastOrigins.knees.bottomRight = kneesCenter + (transform.right + -transform.forward) * size;
+        
+        raycastOrigins.pelvis.topLeft = pelvisCenter + (-transform.right + transform.forward) * size;
+        raycastOrigins.pelvis.bottomLeft = pelvisCenter + (-transform.right + -transform.forward) * size;
+        raycastOrigins.pelvis.topRight = pelvisCenter + (transform.right + transform.forward) * size;
+        raycastOrigins.pelvis.bottomRight = pelvisCenter + (transform.right + -transform.forward) * size;
+
+        raycastOrigins.shoulders.topLeft = shouldersCenter + (-transform.right + transform.forward) * size;
+        raycastOrigins.shoulders.bottomLeft = shouldersCenter + (-transform.right + -transform.forward) * size;
+        raycastOrigins.shoulders.topRight = shouldersCenter + (transform.right + transform.forward) * size;
+        raycastOrigins.shoulders.bottomRight = shouldersCenter + (transform.right + -transform.forward) * size;
+
+        raycastOrigins.head.topLeft = headCenter + (-transform.right + transform.forward) * size;
+        raycastOrigins.head.bottomLeft = headCenter + (-transform.right + -transform.forward) * size;
+        raycastOrigins.head.topRight = headCenter + (transform.right + transform.forward) * size;
+        raycastOrigins.head.bottomRight = headCenter + (transform.right + -transform.forward) * size;
+        
     }
 
     private void CalculateRaySpacing()
