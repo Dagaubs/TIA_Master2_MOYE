@@ -84,7 +84,7 @@ public class TouchPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         BaseImage.gameObject.SetActive(false);
         mDragging = false;
         mId = -1;
-        //UpdateVirtualAxes(Vector3.zero);
+        UpdateVirtualAxes(Vector3.zero);
     }
     #endregion
 
