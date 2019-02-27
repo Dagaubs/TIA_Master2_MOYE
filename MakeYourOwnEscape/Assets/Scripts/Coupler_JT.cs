@@ -12,7 +12,9 @@ public class Coupler_JT : JoinedTransform
     {
         Vector3 translate = col.transform.position - transform.position;
 
-        parent_card.ForcePos(transform.position + translate);
+        Debug.Log(gameObject.name + " triggered with " + col.name + " | moving gameobject to " + parent_card.transform.position + translate);
+        
+        parent_card.ForcePos(parent_card.transform.position + translate);
     }
     
 }

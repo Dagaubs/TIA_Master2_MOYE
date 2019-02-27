@@ -52,9 +52,15 @@ public class Card : MonoBehaviour {
 	void Update () {
         if (isForcedPos)
         {
+            Debug.Log("Card is forced ");
+            if(transform.position != focusedPos)
+            {
+                Debug.Log("actual pos : " + transform.position + " | target : " + focusedPos);
+            }
             transform.position = focusedPos;
             Vector3 localWithoutHeight = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
-            if(localWithoutHeight.sqrMagnitude > joint_force)
+            Debug.Log("Local Pos : " + transform.localPosition + " | sqrt Mag : " + localWithoutHeight.sqrMagnitude);
+            if (localWithoutHeight.sqrMagnitude > joint_force)
             {
                 transform.localPosition = originPos;
                 focusedPos = originPos;
