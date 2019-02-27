@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour {
 
     #region Static
 
-    private static GameManager instance;
+    public static GameManager instance;
 
     #endregion
 
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     private Player3D actualPlayer;
+    
     #endregion
 
     #region Unity Methods
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour {
     public void spawnPlayer()
     {
         //actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation).GetComponent<Player3D>();
-    //    actualPlayer.SpawnPlayer(); A REMETTRE QUAND IL SERA DANS LA SCENE !!
+        actualPlayer.SpawnPlayer();
     }
 
     public bool DisplaySetPositionUI(SetPositionHandler caller)

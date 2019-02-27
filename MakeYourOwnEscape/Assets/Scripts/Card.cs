@@ -10,7 +10,7 @@ public class Card : MonoBehaviour {
 #region Script Parameters
 	public GameObject forbiddenBuildCube;
 
-    public Vector3 originPos;
+    public Vector3 originPos, originRot;
 
     public float joint_force;
 #endregion
@@ -20,7 +20,7 @@ public class Card : MonoBehaviour {
 
     bool isForcedPos = false;
 
-    Vector3 focusedPos;
+    Vector3 focusedPos, focusedRot;
 
 #endregion
 
@@ -28,21 +28,24 @@ public class Card : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         focusedPos = originPos;
+        focusedRot = originRot;
 	}
 
-    public void ForcePos(Vector3 newFocusedPos)
+    public void ForcePos(Vector3 newFocusedPos, Vector3 newFocusedRot)
     {
         if(focusedPos != originPos)
         {
             if(newFocusedPos.sqrMagnitude < focusedPos.sqrMagnitude)
             {
                 focusedPos = newFocusedPos;
+                focusedRot = newFocusedRot;
             }
         }
         else
         {
             isForcedPos = true;
             focusedPos = newFocusedPos;
+            focusedRot = newFocusedRot;
         }
 
 
@@ -58,13 +61,17 @@ public class Card : MonoBehaviour {
                 Debug.Log("actual pos : " + transform.position + " | target : " + focusedPos);
             }
             transform.position = focusedPos;
+            transform.eulerAngles = focusedRot;
             Vector3 localWithoutHeight = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
-            Debug.Log("Local Pos : " + transform.localPosition + " | sqrt Mag : " + localWithoutHeight.sqrMagnitude);
+            Debug.Log("new Pos : " + transform.position + " | Local Pos : " + transform.localPosition + " | sqrt Mag : " + localWithoutHeight.sqrMagnitude);
             if (localWithoutHeight.sqrMagnitude > joint_force)
             {
                 transform.localPosition = originPos;
+                transform.localEulerAngles = originRot;
                 focusedPos = originPos;
+                focusedRot = originRot;
                 isForcedPos = false;
+                Debug.Log("No longer forcing pose !");
             }
         }
 	}

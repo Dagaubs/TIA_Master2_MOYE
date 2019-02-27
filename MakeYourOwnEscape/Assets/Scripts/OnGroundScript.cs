@@ -22,6 +22,7 @@ public class OnGroundScript : MonoBehaviour
         if (collision.collider.gameObject.CompareTag("Player"))
         {
             //restart
+            GameManager.instance.Die();
             Debug.Log("restart");
         }
     }
