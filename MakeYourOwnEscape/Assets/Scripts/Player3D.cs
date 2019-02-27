@@ -32,7 +32,9 @@ public class Player3D : MonoBehaviour {
 	[SerializeField]
 	private bool useKeyBoard = false, _break;
 
-    private bool mouseDown = false, gameRunning = false;
+    private bool mouseDown = false, inAir = false;
+
+    public bool gameRunning = false;
 
 	private Vector3 targetOrientation;
 
@@ -52,6 +54,7 @@ public class Player3D : MonoBehaviour {
 	void Update () {
         if (gameRunning)
         {
+            /*
             if (Input.GetMouseButtonDown(1))
             {
                 mouseDown = true;
@@ -60,14 +63,14 @@ public class Player3D : MonoBehaviour {
             {
                 mouseDown = false;
             }
-
+            */
             bool jumpPressed, jumpUnPressed;
             if (!useKeyBoard)
             {
                 Vector3 direction_joystick = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"), 0f, CrossPlatformInputManager.GetAxis("Vertical"));
-                jumpPressed = CrossPlatformInputManager.GetButtonDown("Jump");
-                jumpUnPressed = CrossPlatformInputManager.GetButtonUp("Jump");
-                if (direction_joystick.magnitude > 0.1f && mouseDown)
+                jumpPressed = CrossPlatformInputManager.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space);
+                jumpUnPressed = CrossPlatformInputManager.GetButtonUp("Jump") || Input.GetKeyUp(KeyCode.Space);
+                if (direction_joystick.magnitude > 0.1f /*&& mouseDown*/)
                 {
                     Vector3 Z_prime = Camera.main.cameraToWorldMatrix.MultiplyVector(Vector3.zero);
                     //Vector3 axis = Vector3.Cross(transform.up, Z_prime);
@@ -137,6 +140,7 @@ public class Player3D : MonoBehaviour {
             if (jumpPressed && controller.collisions.below)
             {
                 animator.SetTrigger("Jump");
+                inAir = true;
                 velocity.y = maxJumpVelocity;
             }
 
@@ -148,8 +152,25 @@ public class Player3D : MonoBehaviour {
                 }
             }
 
-            if (!controller.collisions.below) velocity.y += gravity * Time.deltaTime;
-            else if (!jumpPressed) velocity.y = 0;
+            if (!controller.collisions.below)
+            {
+                velocity.y += gravity * Time.deltaTime;
+                if (!inAir)
+                {
+                    inAir = true;
+                    animator.SetTrigger("InAir");
+                }
+            }
+            else if (!jumpPressed)
+            {
+                if (inAir)
+                {
+                    animator.SetTrigger("Land");
+                    inAir = false;
+                    
+                }
+                velocity.y = 0;
+            }
 
             animator.SetFloat("speed", velocity.z);
             controller.Move(velocity * Time.deltaTime);

@@ -320,3 +320,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forbiddenBuildCube: {fileID: 1190683721333580}
+  joint_force: 0
