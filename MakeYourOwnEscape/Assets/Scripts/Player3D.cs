@@ -91,11 +91,12 @@ public class Player3D : MonoBehaviour {
                     //float angle = Vector3.Angle(transform.up, Z_prime);
                     //transform.RotateAround(transform.position, axis, angle);
 
-                    Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
-                    Vector3 forwardMatrix = Camera.main.cameraToWorldMatrix.MultiplyVector(transform.forward);
-                    //Vector3 xy_p = direction_joystick;
+                    Vector3 forwardMatrix = transform.forward;
+                    //Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
+                    //Vector3 forwardMatrix = Camera.main.cameraToWorldMatrix.MultiplyVector(transform.forward);
+                    Vector3 xy_p = direction_joystick;
 
-                    angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
+                    angle2 = Vector3.Angle(forwardMatrix, xy_p - Z_prime);
                     
                     Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.gray);
                     Debug.DrawRay(Z_prime, forwardMatrix, Color.cyan);
@@ -104,6 +105,7 @@ public class Player3D : MonoBehaviour {
                     Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
                     
                     bool _isLeft = isLeft(-forwardMatrix, forwardMatrix, xy_p);
+                    Debug.Log("Found angle : " + (_isLeft ? -angle2 : angle2));
                     if (_isLeft)
                     {
                         angle2 = -2 * angle2 / 5;

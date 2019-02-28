@@ -34,6 +34,8 @@ public class Card : MonoBehaviour, IVirtualButtonEventHandler
     Vector3 offset = Vector3.up *3;
     GameObject imageLockUsed;
 
+    private int actualLevel = 0;
+
     Vector3 focusedPos, focusedRot;
 
     float offsetWith = 0.005f, worldScale;
@@ -89,6 +91,7 @@ public class Card : MonoBehaviour, IVirtualButtonEventHandler
 
         }else
         {
+            /*
             Vector3 target = getPosBlock();
             if (target != Vector3.zero)
             {
@@ -96,7 +99,7 @@ public class Card : MonoBehaviour, IVirtualButtonEventHandler
                 focusedPos = target;
                 transform.position = focusedPos;
                 isForcedPos = true;
-            }
+            }*/
         }
     }
 
@@ -118,6 +121,26 @@ public class Card : MonoBehaviour, IVirtualButtonEventHandler
     #endregion
 
     #region Methods
+
+    public void GoUp()
+    {
+        if(actualLevel < GameManager.instance.GetActualMaxLevelHeight())
+        {
+            actualLevel++;
+            float height_step = GameManager.instance.GetHeightStep();
+            transform.localPosition = originPos + Vector3.up * ((height_step * transform.localScale.x) * actualLevel);
+        }
+    }
+
+    public void GoDown()
+    {
+        if(actualLevel > 0)
+        {
+            actualLevel--;
+            float height_step = GameManager.instance.GetHeightStep();
+            transform.localPosition = originPos + Vector3.up * ((height_step * transform.localScale.x) * actualLevel);
+        }
+    }
 
     public void OnButtonPressed(VirtualButtonBehaviour vb)
     {
@@ -216,7 +239,7 @@ public class Card : MonoBehaviour, IVirtualButtonEventHandler
         var minPos = Mathf.Infinity;
         Transform bestBlockTransform = null;
 
-        RaycastHit[] hit = Physics.SphereCastAll(transform.position, 0.0001f, transform.forward,  worldScale * 1.5f, layerMask);
+        RaycastHit[] hit = Physics.SphereCastAll(transform.position, 0.0001f, transform.forward,  worldScale * 1.7f, layerMask);
        
         for(int i=0; i<hit.Length; ++i)
         {

@@ -31,7 +31,10 @@ public class GameManager : MonoBehaviour {
     #region Fields
 
     [SerializeField]
-    private int nbLife;
+    private int nbLife, nbLevelOfHeight;
+
+    [SerializeField]
+    private float height_step;
 
     [SerializeField]
     private TMPro.TextMeshProUGUI nbLifeText;
@@ -66,6 +69,16 @@ public class GameManager : MonoBehaviour {
 #endregion
 
 #region Methods
+    public int GetActualMaxLevelHeight()
+    {
+        return nbLevelOfHeight;
+    }
+
+    public float GetHeightStep()
+    {
+        return height_step;
+    }
+
     public void spawnPlayer()
     {
         actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation, _spawnPoint.parent).GetComponent<Player3D>();
