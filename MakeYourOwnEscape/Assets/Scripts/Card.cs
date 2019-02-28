@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vuforia;
 
-public class Card : MonoBehaviour {
+public class Card : MonoBehaviour, IVirtualButtonEventHandler
+{
 
 #region Static
 #endregion
@@ -12,13 +15,16 @@ public class Card : MonoBehaviour {
 
     public Vector3 originPos, originRot;
 
+    [SerializeField]
+    private GameObject virtualButton;
+
     public float joint_force;
 #endregion
 
 #region Fields
 	int _nb_elmnt_inside;
 
-    bool isForcedPos = false;
+    bool isForcedPos = false, isForceRot = false;
 
     Vector3 focusedPos, focusedRot;
 
@@ -44,6 +50,11 @@ public class Card : MonoBehaviour {
         else
         {
             isForcedPos = true;
+            isForceRot = true;
+            if(virtualButton != null)
+            {
+                virtualButton.SetActive(true);
+            }
             focusedPos = newFocusedPos;
             focusedRot = newFocusedRot;
         }
@@ -61,7 +72,10 @@ public class Card : MonoBehaviour {
                 Debug.Log("actual pos : " + transform.position + " | target : " + focusedPos);
             }
             transform.position = focusedPos;
-            transform.eulerAngles = focusedRot;
+            if (isForceRot)
+            {
+                transform.eulerAngles = focusedRot;
+            }
             Vector3 localWithoutHeight = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
             Debug.Log("new Pos : " + transform.position + " | Local Pos : " + transform.localPosition + " | sqrt Mag : " + localWithoutHeight.sqrMagnitude);
             if (localWithoutHeight.sqrMagnitude > joint_force)
@@ -71,6 +85,8 @@ public class Card : MonoBehaviour {
                 focusedPos = originPos;
                 focusedRot = originRot;
                 isForcedPos = false;
+                isForceRot = false;
+                virtualButton.SetActive(false);
                 Debug.Log("No longer forcing pose !");
             }
         }
@@ -87,11 +103,49 @@ public class Card : MonoBehaviour {
 			forbiddenBuildCube.SetActive(false);
 		}
 	}
-#endregion
 
-#region Methods
-#endregion
+    public void OnButtonPressed(VirtualButtonBehaviour vb)
+    {
+        throw new NotImplementedException();
+    }
 
-#region Private Functions
-#endregion
+    private void switchForceRotState()
+    {
+        if (!isForcedPos)
+        {
+            Debug.LogError("Shouldn't be able to switch rotState cause not forced POs !");
+        }
+        else
+        {
+            isForceRot = !isForceRot;
+            if (isForceRot)
+            {
+                focusedRot = transform.eulerAngles;
+            }
+            // TODO: set UI
+        }
+    }
+
+    public void OnButtonReleased(VirtualButtonBehaviour vb)
+    {
+        if (vb.VirtualButtonName == "LockButton")
+        {
+            if (!isForcedPos)
+            {
+                Debug.LogError("Shouldn't be able to hit button !");
+            }
+            else
+            {
+                switchForceRotState();
+            }
+
+        }
+    }
+    #endregion
+
+    #region Methods
+    #endregion
+
+    #region Private Functions
+    #endregion
 }

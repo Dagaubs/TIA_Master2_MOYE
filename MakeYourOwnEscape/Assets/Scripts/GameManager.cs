@@ -24,10 +24,13 @@ public class GameManager : MonoBehaviour {
     private TMPro.TextMeshProUGUI nbLifeText;
 
     [SerializeField]
+    private TMPro.TextMeshProUGUI dialogText;
+
+    [SerializeField]
     private Transform _spawnPoint;
 
     [SerializeField]
-    private Canvas GameOverCanvas;
+    private Canvas GameOverCanvas, DialogCanvas;
 
     [SerializeField]
     private GameObject player_prefab;
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour {
     void Start () {
         instance = this;
         nbLifeText.text = "x" + nbLife;
+        dialogText.text = "c'est parti pour l'aventure"; //change for the real text
     }
 	
 	// Update is called once per frame
@@ -83,6 +87,13 @@ public class GameManager : MonoBehaviour {
         {
             spawnPlayer();
         }
+    }
+
+    public void winGame()
+    {
+        dialogText.text = "win";
+        DialogCanvas.enabled = true;
+        
     }
     #endregion
 

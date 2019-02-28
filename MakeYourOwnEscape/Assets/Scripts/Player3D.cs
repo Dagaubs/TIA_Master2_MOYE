@@ -91,18 +91,19 @@ public class Player3D : MonoBehaviour {
                     //float angle = Vector3.Angle(transform.up, Z_prime);
                     //transform.RotateAround(transform.position, axis, angle);
 
-                    //Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
-                    Vector3 xy_p = direction_joystick;
+                    Vector3 xy_p = Camera.main.cameraToWorldMatrix.MultiplyVector(direction_joystick);
+                    Vector3 forwardMatrix = Camera.main.cameraToWorldMatrix.MultiplyVector(transform.forward);
+                    //Vector3 xy_p = direction_joystick;
 
                     angle2 = Vector3.Angle(transform.forward, xy_p - Z_prime);
-                    /*
+                    
                     Debug.DrawRay(Z_prime, xy_p - Z_prime, Color.gray);
-                    Debug.DrawRay(Z_prime, transform.forward, Color.cyan);
+                    Debug.DrawRay(Z_prime, forwardMatrix, Color.cyan);
 
                     Debug.DrawLine(Camera.main.transform.position, Z_prime, Color.yellow);
                     Debug.DrawLine(Camera.main.transform.position, xy_p, Color.blue);
-                    */
-                    bool _isLeft = isLeft(-transform.forward, transform.forward, xy_p);
+                    
+                    bool _isLeft = isLeft(-forwardMatrix, forwardMatrix, xy_p);
                     if (_isLeft)
                     {
                         angle2 = -2 * angle2 / 5;
@@ -192,10 +193,10 @@ public class Player3D : MonoBehaviour {
             animator.SetFloat("speed", velocity.z);
             controller.Move(velocity * Time.deltaTime, angle2, worldScale);
             
-            if(transform.localEulerAngles.x > maxRotationStep || transform.localEulerAngles.z > maxRotationStep)
+            /*if(transform.localEulerAngles.x > maxRotationStep || transform.localEulerAngles.z > maxRotationStep)
             {
                 transform.localEulerAngles -= new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
-            }
+            }*/
 
             velocity = velocity / 3;
         }

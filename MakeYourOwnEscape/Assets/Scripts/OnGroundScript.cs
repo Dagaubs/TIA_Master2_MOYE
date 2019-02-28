@@ -10,8 +10,8 @@ public class OnGroundScript : MonoBehaviour
         {
             //restart
             Debug.Log("Felll of the GORuuuurogue");
-            GameManager.instance.Die();
             Destroy(collider.gameObject);
+            GameManager.instance.Die();
         }
     }
 }

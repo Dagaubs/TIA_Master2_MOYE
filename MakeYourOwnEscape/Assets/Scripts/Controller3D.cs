@@ -46,7 +46,7 @@ public class Controller3D : MonoBehaviour {
         if (angle != 0f)
         {
             HorizontalCollisions(ref angle);
-            transform.RotateAround(transform.position, transform.up, angle);
+            //transform.RotateAround(transform.position, transform.up, angle);
         }/*
         if (velocity.y != 0)
         {
