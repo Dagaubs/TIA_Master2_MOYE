@@ -13,6 +13,19 @@ public class GameManager : MonoBehaviour {
 
     #region Script Parameters
     private GameObject _actualSetPositionPanel = null;
+
+    public static float GetWorldScaleFromTransform(Transform trans)
+    {
+        Transform actual = trans;
+        float ret = trans.localScale.x;
+        while (actual.parent != null)
+        {
+            actual = actual.parent;
+            ret *= actual.localScale.x;
+        }
+        return ret;
+    }
+
     #endregion
 
     #region Fields
