@@ -4,26 +4,14 @@ using UnityEngine;
 
 public class OnGroundScript : MonoBehaviour
 {
-    public GameObject player;
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider collider)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             //restart
+            Debug.Log("Felll of the GORuuuurogue");
             GameManager.instance.Die();
-            Debug.Log("restart");
+            Destroy(collider.gameObject);
         }
     }
 }

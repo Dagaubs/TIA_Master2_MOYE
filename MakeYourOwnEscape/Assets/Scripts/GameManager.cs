@@ -24,9 +24,14 @@ public class GameManager : MonoBehaviour {
     private TMPro.TextMeshProUGUI nbLifeText;
 
     [SerializeField]
+    private Transform _spawnPoint;
+
+    [SerializeField]
     private Canvas GameOverCanvas;
 
     [SerializeField]
+    private GameObject player_prefab;
+
     private Player3D actualPlayer;
     
     #endregion
@@ -46,7 +51,8 @@ public class GameManager : MonoBehaviour {
 #region Methods
     public void spawnPlayer()
     {
-        //actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation).GetComponent<Player3D>();
+        actualPlayer = Instantiate(player_prefab, _spawnPoint.position, _spawnPoint.rotation, _spawnPoint.parent).GetComponent<Player3D>();
+        Debug.Log("Spawn player to world pos : " + _spawnPoint.position);
         actualPlayer.SpawnPlayer();
     }
 
@@ -72,6 +78,10 @@ public class GameManager : MonoBehaviour {
         if(nbLife <= 0)
         {
             GameOverCanvas.enabled = true;
+        }
+        else
+        {
+            spawnPlayer();
         }
     }
     #endregion

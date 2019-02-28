@@ -19,12 +19,12 @@ public class Player3D : MonoBehaviour {
 	[SerializeField]
 	private float maxSpeed = 18f;
 	[SerializeField]
-	private float VelocityAcceleration = 8f, rotationAcceleration = 3f, visionDistance = 1f;
+	private float VelocityAcceleration = 8f, rotationAcceleration = 3f, InAirAcceleration = 3f;
 
 	[SerializeField]
-	private float rotateSpeed = 0.1f, step = 90f, removeStep = 180f, maxStep = 40f, timeToRecover;
+	private float rotateSpeed = 0.1f, timeToRecover, maxRotationStep;
 
-	
+    private float worldScale = 1f;
 
 	[SerializeField]
     private float gravity, maxJumpVelocity, minJumpVelocity;
@@ -47,11 +47,24 @@ public class Player3D : MonoBehaviour {
     public void SpawnPlayer()
     {
         // TODO : ANIMATION SPAWN
+        lookForWorldScale();
+        Debug.Log("Just spawned, parent : " + transform.parent.name + " | world Pos : " + transform.position + " | worldScale : " + worldScale);
         gameRunning = true;
+    }
+
+    private void lookForWorldScale()
+    {
+        Transform actual = transform;
+        worldScale = transform.localScale.x;
+        while(actual.parent != null)
+        {
+            actual = actual.parent;
+            worldScale *= actual.localScale.x;
+        }
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
         if (gameRunning)
         {
             /*
@@ -104,19 +117,20 @@ public class Player3D : MonoBehaviour {
 
                     transform.RotateAround(transform.position, transform.up, angle2);
 
-                    float speed = VelocityAcceleration * direction_joystick.magnitude;
+                    float speed = (controller.collisions.below ? VelocityAcceleration : InAirAcceleration) * direction_joystick.magnitude;
                     velocity = new Vector3(0f, 0f, speed);
                     speed = 0f;
                 }
             }
             else {
+                float acceleration = controller.collisions.below ? VelocityAcceleration : InAirAcceleration;
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
-                    velocity.z = velocity.z - VelocityAcceleration > -maxSpeed ? velocity.z - VelocityAcceleration : -maxSpeed;
+                    velocity.z = velocity.z - acceleration > -maxSpeed ? velocity.z - acceleration : -maxSpeed;
                 }
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
-                    velocity.z = velocity.z + VelocityAcceleration < maxSpeed ? velocity.z + VelocityAcceleration : maxSpeed;
+                    velocity.z = velocity.z + acceleration < maxSpeed ? velocity.z + acceleration : maxSpeed;
                 }
                 float targetOrientation_Y = transform.localEulerAngles.y;
 
@@ -155,7 +169,7 @@ public class Player3D : MonoBehaviour {
 
             if (!controller.collisions.below)
             {
-                velocity.y += gravity * Time.deltaTime;
+                //velocity.y += gravity * Time.deltaTime;
                 /*
                 if (!inAir && !justLanded)
                 {
@@ -176,7 +190,12 @@ public class Player3D : MonoBehaviour {
             }
 
             animator.SetFloat("speed", velocity.z);
-            controller.Move(velocity * Time.deltaTime, angle2);
+            controller.Move(velocity * Time.deltaTime, angle2, worldScale);
+            
+            if(transform.localEulerAngles.x > maxRotationStep || transform.localEulerAngles.z > maxRotationStep)
+            {
+                transform.localEulerAngles -= new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
+            }
 
             velocity = velocity / 3;
         }

@@ -23,18 +23,20 @@ public class Controller3D : MonoBehaviour {
 
     public CollisionInfo collisions;
 
+    private Rigidbody _rigidbody;
+
     public CollisionHitInfo hitInfo;
 
     private float horizontalRaySpacing;
     private float verticalRaySpacing;
 
-
 	void Start(){
 		_collider = GetComponent<BoxCollider>();
+        _rigidbody = GetComponent<Rigidbody>();
         CalculateRaySpacing();
 	}
 
-	public void Move(Vector3 velocity, float angle)
+	public void Move(Vector3 velocity, float angle, float scale)
     {
         UpdateRaycastOrigins();
         collisions.Reset();
@@ -45,17 +47,17 @@ public class Controller3D : MonoBehaviour {
         {
             HorizontalCollisions(ref angle);
             transform.RotateAround(transform.position, transform.up, angle);
-        }
+        }/*
         if (velocity.y != 0)
         {
             VerticalCollisions(ref velocity);
-        }
+        }*/
         if(velocity.z != 0){
             BackAndForwardCollisions(ref velocity);
         }
 
         //Debug.Log("velocity before Translate = " + velocity);
-		/*if(velocity.x != 0){
+        /*if(velocity.x != 0){
 			transform.rotation = velocity.x > 0 ? Quaternion.Euler(Vector3.right) : Quaternion.Euler(Vector3.left);
 		}
 		if(velocity.z != 0){
@@ -65,7 +67,11 @@ public class Controller3D : MonoBehaviour {
         /*if(velocity != Vector3.zero)
             Debug.Break();
         */
-        transform.Translate(velocity);
+        if(_rigidbody != null)
+        {
+            collisions.below = Mathf.Abs(_rigidbody.velocity.y) < 0.01f;
+        }
+        transform.Translate(velocity * scale);
     }
 
     private void BackAndForwardCollisions(ref Vector3 velocity){
